@@ -55,4 +55,25 @@ plan: `plans/smooth-sauteeing-sunbeam.md`
   `.claude/agents/vscode-extension-code-reviewer.md` のTODO解消は本issueのスコープ外。次issue候補として
   HANDOFF.mdに書き添える。
 
+## 追記: F5デバッグ起動時のエラーとその切り分け（レビュー依頼後）
+
+ユーザーがVS Code上で`F5`（Run Extension）を実行したところ、
+`Extension host did not start in 10 seconds, it might be stopped on the first line and needs
+a debugger to continue.` というエラーが発生した。
+
+- `code --version` で確認したVS Code本体は`1.133.0`。`package.json`の`engines.vscode`
+  （`^1.125.0`）を満たしており、バージョン不一致が原因ではないことを確認。
+- `out/extension.js`はビルド済みで内容も正常（`main`フィールドの参照先と一致）。
+- `.vscode/tasks.json`の既定ビルドタスク（`npm: watch`）の設定自体はgenerator-code標準のまま。
+- 切り分けのため、デバッガを介さずに
+  `code --extensionDevelopmentPath="<repo>" --new-window --wait --disable-extensions`
+  でExtension Development Hostを起動したところ、正常に起動し、コマンドパレットから
+  「Hello World」を実行して通知バナーが表示されることをユーザーが確認した。
+  → **拡張自体のコードは正常に動作する**ことを確認済み。今回のF5エラーは拡張のコードの不具合では
+  なく、VS Code側のデバッガアタッチ（Node inspector protocol）のタイムアウトによるものと判断する
+  （Windows環境でのウイルス対策ソフトによる初回起動時の遅延、既存デバッグセッションの残存、
+  単純な一時的タイムアウト等が典型的な原因）。
+- 対応: 再度`F5`を試す／`Ctrl+F5`（デバッガなし実行）で代替、をユーザーに案内。拡張本体・雛形の
+  実装上の対応は不要と判断し、これ以上のコード変更は行わない。
+
 ---
