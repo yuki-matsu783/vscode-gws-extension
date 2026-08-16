@@ -27,8 +27,8 @@ AI⇔AI/AI⇔人間の状況引継ぎメモ。常に「このブランチの現�
 | [x] | 9 | planをもとにMR descriptionを更新する | `describe` |
 | [] | 10 | コンテキスト削減のためにセッションをcompactする | 人間 |
 | [x] | 11 | planをもとに作業を進める、作業内容はworklogに更新する | エージェント |
-| [] | 12 | commit, push してレビュー依頼を行う | エージェント |
-| [] | 13 | 作業内容をもとにMR descriptionを更新する | `describe` |
+| [x] | 12 | commit, push してレビュー依頼を行う | エージェント |
+| [x] | 13 | 作業内容をもとにMR descriptionを更新する | `describe` |
 | [] | 14 | MRでレビュー・コメントする | 人間 |
 | [] | 15 | レビュー内容を取得し、実装・ドキュメントを修正する。対応が完了したコメントには対応内容を返信する（11〜15の作業ループを合意まで繰り返す） | `comments` / `reply` |
 | [] | 16 | 設計反映: `plans/` `worklog/` の内容を `docs/spec/` `docs/ddr/` へ反映する | エージェント |
@@ -55,11 +55,11 @@ AI⇔AI/AI⇔人間の状況引継ぎメモ。常に「このブランチの現�
   `package.json`の`contributes.commands`追加、`extension.test.ts`にアサーション追加。
   `npm run compile`/`lint`/`test`（3件）すべてパス。一時テストで実際にExtension Development Host上
   からパネルオープン・シングルトン動作（2回目実行でreveal）を検証済み（検証後に一時ファイルは削除）。
+- 実装差分をcommit・push、PR [#9](https://github.com/yuki-matsu783/vscode-gws-extension/pull/9)のdescriptionを実装内容で更新。
 
 ## 次にやること
 
-- 実装差分をcommit・pushしてレビュー依頼（フローステップ12）、その後PR descriptionを実装内容で
-  更新（フローステップ13）。
+- PR [#9](https://github.com/yuki-matsu783/vscode-gws-extension/pull/9)で実装のレビュー・コメントを待つ（フローステップ14）。
 
 ## 判断を迷った内容
 
