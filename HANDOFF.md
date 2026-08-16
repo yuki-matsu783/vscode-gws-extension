@@ -16,11 +16,11 @@ AI⇔AI/AI⇔人間の状況引継ぎメモ。常に「このブランチの現�
 
 | 進捗 | flow-id | ステップ | 担当 |
 |----|---|---|---|
-| [] | 1 | issueを起票する（`.github/ISSUE_TEMPLATE/task.md` / `.gitlab/issue_templates/task.md` で目的・現状・期待する動作・受け入れ条件を記載） | 人間 |
-| [] | 2 | issueの内容を取得する | `start <issue番号>` |
-| [] | 3 | featureブランチ（`feature-<issue番号>-<slug>`）とDraft MRを作成する（既にあれば `sync` のみ） | `start` |
-| [] | 4 | Planモードで実行手順を作成する（`plans/` へ出力・コミット。このタイミングで `worklog/日付_<plan名>.md` を作成） | エージェント |
-| [] | 5 | Planに合意する | 人間 |
+| [x] | 1 | issueを起票する（`.github/ISSUE_TEMPLATE/task.md` / `.gitlab/issue_templates/task.md` で目的・現状・期待する動作・受け入れ条件を記載） | 人間 |
+| [x] | 2 | issueの内容を取得する | `start <issue番号>` |
+| [x] | 3 | featureブランチ（`feature-<issue番号>-<slug>`）とDraft MRを作成する（既にあれば `sync` のみ） | `start` |
+| [x] | 4 | Planモードで実行手順を作成する（`plans/` へ出力・コミット。このタイミングで `worklog/日付_<plan名>.md` を作成） | エージェント |
+| [x] | 5 | Planに合意する | 人間 |
 | [] | 6 | commit, push してレビュー依頼を行う | エージェント |
 | [] | 7 | MRで再度planについてレビュー・コメントする。レビュー完了済み連絡をするまで以降の作業は行わない。 | 人間 |
 | [] | 8 | レビュー内容を取得し、planを修正する。対応が完了したコメントには対応内容を返信する（7〜8を合意まで繰り返す） | `comments` / `reply` |
@@ -42,11 +42,17 @@ AI⇔AI/AI⇔人間の状況引継ぎメモ。常に「このブランチの現�
 
 ## やったこと
 
-（なし）
+- issue #7を取得。本文の4見出しは存在するが中身は未記入（プレースホルダのまま）だったため、
+  ユーザーに確認し「issue #6のパターンをそのまま踏襲した最小サンプル」として進める方針で合意。
+- `feature-7-react-webview`ブランチ・Draft PR [#9](https://github.com/yuki-matsu783/vscode-gws-extension/pull/9)を作成。
+- Plan作成: `plans/floofy-splashing-sparrow.md`（`vscode.window.createWebviewPanel`を使った
+  `EditorPanelProvider`の新規実装、`getWebviewHtml.ts`共通化、esbuild複数entry point化 等）。
+  ユーザー承認済み。worklog: `worklog/20260817_floofy-splashing-sparrow.md`。
 
 ## 次にやること
 
-（なし。次のタスクはissueを起票し `/issue-mr-flow start <issue番号>` から開始する）
+- `plans/floofy-splashing-sparrow.md`の実装ステップ1〜9に沿って実装を進める。
+- plan/worklogをcommit・pushしてレビュー依頼（フローステップ6）。
 
 ## 判断を迷った内容
 
