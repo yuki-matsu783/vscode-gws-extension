@@ -10,9 +10,14 @@ const watch = process.argv.includes('--watch');
 
 /** @type {import('esbuild').BuildOptions} */
 const buildOptions = {
-	entryPoints: ['src/webview/index.tsx'],
+	entryPoints: [
+		// サイドバー（WebviewViewProvider）用。出力名は既存の main.js を維持する。
+		{ in: 'src/webview/index.tsx', out: 'main' },
+		// メインエディタ領域（WebviewPanel）用。
+		{ in: 'src/webview/editorPanelIndex.tsx', out: 'editorPanel' },
+	],
 	bundle: true,
-	outfile: 'out/webview/main.js',
+	outdir: 'out/webview',
 	platform: 'browser',
 	format: 'iife',
 	target: 'es2022',

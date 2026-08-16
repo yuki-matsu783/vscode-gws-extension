@@ -20,6 +20,10 @@
       {
         "command": "vscode-gws-extension.sendFileToApi",
         "title": "GWS: 選択ファイルを外部APIに送信（サンプル）"
+      },
+      {
+        "command": "vscode-gws-extension.openEditorPanel",
+        "title": "GWS: メインエディタにReact Webviewを開く（サンプル）"
       }
     ],
     "viewsContainers": {

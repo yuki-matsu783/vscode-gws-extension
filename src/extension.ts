@@ -2,6 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import { SidebarViewProvider } from './webview/SidebarViewProvider';
+import { EditorPanelProvider } from './webview/EditorPanelProvider';
 
 // 右クリックメニューからのリクエスト送信先（POST {apiBaseUrl}/analyze）。エンドポイントの正式な契約は
 // Python API側（別リポジトリ、スコープ外）が決まり次第見直す。詳細: plans/zazzy-foraging-meerkat.md
@@ -36,7 +37,17 @@ export function activate(context: vscode.ExtensionContext) {
 		new SidebarViewProvider(context.extensionUri)
 	);
 
-	context.subscriptions.push(helloWorldDisposable, sendFileToApiDisposable, sidebarViewProvider);
+	const openEditorPanelDisposable = vscode.commands.registerCommand(
+		'vscode-gws-extension.openEditorPanel',
+		() => EditorPanelProvider.createOrShow(context.extensionUri)
+	);
+
+	context.subscriptions.push(
+		helloWorldDisposable,
+		sendFileToApiDisposable,
+		sidebarViewProvider,
+		openEditorPanelDisposable
+	);
 }
 
 // エディタ/エクスプローラーの右クリックメニューから呼ばれるサンプルコマンド。選択ファイルのパスを

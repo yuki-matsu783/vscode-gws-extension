@@ -6,14 +6,15 @@ title: コーディングルール（TypeScript / VS Code拡張・React Webview�
 type: rule
 description: vscode-gws-extension本体（拡張ホスト・React Webview）のTypeScript/TSXコーディング規約
 tags: [typescript, vscode-extension, react, webview, coding-style]
-keywords: [命名規則, activationEvents, WebviewViewProvider, postMessage, viewsContainers, fetch, AbortController, esbuild, acquireVsCodeApi, CSP, nonce]
+keywords: [命名規則, activationEvents, WebviewViewProvider, WebviewPanel, createWebviewPanel, postMessage, viewsContainers, fetch, AbortController, esbuild, acquireVsCodeApi, CSP, nonce]
 ---
 
 # コーディングルール（TypeScript / VS Code拡張・React Webview）
 
-issue #4（右クリックメニュー→外部API送信サンプル）・issue #6（サイドバーReact Webviewサンプル）の
-実装で判明した、再現性のある具体的な規約・注意点をまとめる。`.claude/rules/directory-structure.md`
-が定めるディレクトリ構成（`src/extension.ts` = 拡張ホスト、`src/webview/` = React Webview）を前提とする。
+issue #4（右クリックメニュー→外部API送信サンプル）・issue #6（サイドバーReact Webviewサンプル）・
+issue #7（メインエディタ領域React Webviewサンプル）の実装で判明した、再現性のある具体的な規約・
+注意点をまとめる。`.claude/rules/directory-structure.md`が定めるディレクトリ構成
+（`src/extension.ts` = 拡張ホスト、`src/webview/` = React Webview）を前提とする。
 
 ## 基本
 
@@ -73,8 +74,32 @@ issue #4（右クリックメニュー→外部API送信サンプル）・issue 
   ルートの`tsconfig.json`ではなく`src/webview/tsconfig.json`（`noEmit`、型チェック専用）を使い、
   ルート`tsconfig.json`の`exclude`に`src/webview`を加えて二重コンパイルを避ける。
 - Webview用JS/CSSのバンドルはesbuild（`esbuild.js`、`node esbuild.js` / `node esbuild.js --watch`）で
-  単一ファイル（`out/webview/main.js`）へ出力する。拡張ホスト側の`tsc -p ./`ビルドはesbuildに
-  置き換えない（役割を分離し、既存ビルドへの影響を最小化する）。
+  行う。拡張ホスト側の`tsc -p ./`ビルドはesbuildに置き換えない（役割を分離し、既存ビルドへの影響を
+  最小化する）。Webviewホスト（`WebviewView`/`WebviewPanel`）が複数ある場合は、`entryPoints`を
+  `[{ in: 'src/webview/xxx.tsx', out: 'xxx' }, ...]`の配列オブジェクト形式にし、`outfile`ではなく
+  `outdir: 'out/webview'`を指定することで、1回の`esbuild.build`呼び出しで複数バンドルを個別ファイル
+  として出力できる（実装: `esbuild.js`。既存の出力ファイル名は`out`キーで維持できるため、
+  新規Webviewホスト追加時に既存側の出力に影響しない）。
+- CSP/nonce生成のようなセキュリティ関連ロジックを複数のWebviewホスト（`WebviewViewProvider`実装・
+  `WebviewPanel`管理クラス）で使う場合は、共有ユーティリティ関数（実装:
+  `src/webview/getWebviewHtml.ts`）に集約し、各ホスト側の実装へコピーしない（CSP設定のドリフトを
+  防ぐため）。
+
+## メインエディタ領域のWebview（`vscode.window.createWebviewPanel`）
+
+- `WebviewViewProvider`と異なり、`createWebviewPanel`はVS Code側がインスタンスのライフサイクルを
+  一元管理しない。拡張側で明示的にシングルトン管理する必要があり、VS Code公式`webview-sample`の
+  `CatCodingPanel`パターン（`currentPanel`静的参照＋`createOrShow(extensionUri)`静的ファクトリ＋
+  `panel.onDidDispose`での解放）を採用する（実装: `src/webview/EditorPanelProvider.ts`）。
+  `createOrShow`は既存パネルがあれば`panel.reveal(column)`、無ければ`vscode.window.createWebviewPanel`
+  で新規作成する。
+- `createWebviewPanel`はコマンドから呼び出す想定のため、`contributes.views`/`viewsContainers`への
+  静的な宣言は不要（`contributes.commands`にコマンドを1件追加し、`activate()`で
+  `vscode.commands.registerCommand`から`createOrShow`を呼ぶだけでよい）。
+- `ViewColumn`は`vscode.window.activeTextEditor?.viewColumn ?? vscode.ViewColumn.One`
+  （現在アクティブなエディタ列に開く）を既定パターンとする。
+- `retainContextWhenHidden`は、パネル非表示中も状態を保持する必要が無いサンプル・軽量な用途では
+  指定しない（`false`相当）。パネル内に保持したい状態がある場合のみ`true`を検討する。
 
 ## テスト
 
@@ -84,9 +109,16 @@ issue #4（右クリックメニュー→外部API送信サンプル）・issue 
   明示的にactivateする。
 - Webview内部のReact描画（DOM操作・クリック挙動）は`@vscode/test-cli`のExtension Development Host
   テストでは検証しない（webviewはiframe相当で分離されており、テストAPIから直接操作しにくいため）。
-  代わりに、`package.json`の`contributes.views`にIDが正しく定義されているかという静的チェックを
-  軽量テストとして追加し（実装: `src/test/extension.test.ts`の「サイドバーwebview viewが定義されている」）、
-  実際の見た目・操作感はF5でのExtension Development Host起動による目視確認に委ねる。
+  代わりに、`package.json`の`contributes.views`/`contributes.commands`にIDが正しく定義されているかと
+  いう静的チェックを軽量テストとして追加し（実装: `src/test/extension.test.ts`の
+  「サイドバーwebview viewが定義されている」「コマンドが登録されている」）、実際の見た目・操作感は
+  F5でのExtension Development Host起動による目視確認に委ねる。
+- F5起動が難しい環境（対話的操作ができないCLIセッション等）でも、`@vscode/test-cli`の実行環境
+  （実Extension Development Host）を使えば、`vscode.commands.executeCommand`でコマンドを実行し
+  `vscode.window.tabGroups`でWebviewPanelタブの開閉・件数を検証する、といった一時的なテストを
+  書いて動作確認できる。この種の一時テストは恒久的な自動テストの方針（上記）とは別物なので、
+  確認後は削除し、コミット対象に含めない（実例: issue #7実装時に
+  `openEditorPanel`コマンドの2回目実行でパネルが増えず`reveal`されることをこの方法で検証した）。
 
 ## VS Code拡張API固有の注意点
 

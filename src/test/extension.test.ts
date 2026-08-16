@@ -22,6 +22,7 @@ suite('Extension Test Suite', () => {
 		const commands = await vscode.commands.getCommands(true);
 		assert.ok(commands.includes('vscode-gws-extension.helloWorld'));
 		assert.ok(commands.includes('vscode-gws-extension.sendFileToApi'));
+		assert.ok(commands.includes('vscode-gws-extension.openEditorPanel'));
 	});
 
 	test('サイドバーwebview viewが定義されている', () => {

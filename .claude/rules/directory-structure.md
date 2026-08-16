@@ -11,24 +11,33 @@
 ## 現在のツリー
 
 拡張本体は`yo code` / generator-codeによるTypeScript雛形（issue #2）に、右クリックメニュー→外部API
-送信サンプル（issue #4）とサイドバーReact Webviewサンプル（issue #6）を実装した状態。
+送信サンプル（issue #4）、サイドバーReact Webviewサンプル（issue #6）、メインエディタ領域React
+Webviewサンプル（issue #7）を実装した状態。
 
 ```
 vscode-gws-extension/
 ├── src/
 │   ├── extension.ts            # 拡張のエントリポイント（activate/deactivate）。コマンド登録・
-│   │                            # WebviewViewProviderの登録を行う（実処理は極力持たない）
-│   ├── webview/                 # React Webview（サイドバーview等）のソース一式
-│   │   ├── SidebarViewProvider.ts # ホスト側: vscode.WebviewViewProvider実装、HTML生成・
-│   │   │                          # CSP/nonce設定、postMessage受信→コマンド実行の橋渡し
-│   │   ├── index.tsx              # webview側Reactエントリポイント（createRoot）
-│   │   ├── App.tsx                # Reactコンポーネント本体
-│   │   ├── vscodeApi.ts           # acquireVsCodeApi()の単一取得ラッパー
+│   │                            # WebviewViewProvider/コマンドからのWebviewPanel起動の登録を行う
+│   │                            # （実処理は極力持たない）
+│   ├── webview/                 # React Webview（サイドバーview・メインエディタパネル）のソース一式
+│   │   ├── SidebarViewProvider.ts # ホスト側: vscode.WebviewViewProvider実装（サイドバー常駐）、
+│   │   │                          # getWebviewHtmlの呼び出し、postMessage受信→コマンド実行の橋渡し
+│   │   ├── EditorPanelProvider.ts # ホスト側: vscode.window.createWebviewPanelのシングルトン
+│   │   │                          # 管理クラス（メインエディタ領域、公式webview-sampleの
+│   │   │                          # CatCodingPanelパターン準拠）。createOrShow/onDidDispose
+│   │   ├── getWebviewHtml.ts      # CSP/nonceベースのHTML生成ユーティリティ（両Providerで共有）
+│   │   ├── index.tsx              # webview側Reactエントリポイント（サイドバー用、createRoot）
+│   │   ├── App.tsx                # Reactコンポーネント本体（サイドバー用）
+│   │   ├── editorPanelIndex.tsx   # webview側Reactエントリポイント（メインエディタパネル用）
+│   │   ├── EditorApp.tsx          # Reactコンポーネント本体（メインエディタパネル用）
+│   │   ├── vscodeApi.ts           # acquireVsCodeApi()の単一取得ラッパー（両entry pointで共有）
 │   │   └── tsconfig.json          # webview専用の型チェックtsconfig（jsx/DOM libを持つ。noEmit）
 │   └── test/                   # @vscode/test-cli によるテスト（extension.test.ts）
 ├── media/
 │   └── icon.svg                 # Activity Bar用アイコン（contributes.viewsContainersから参照）
-├── esbuild.js                   # Webview（src/webview/）をout/webview/main.jsへバンドルするスクリプト
+├── esbuild.js                   # Webview（src/webview/）をout/webview/{main,editorPanel}.jsへ
+│                                 # バンドルするスクリプト（entryPointsを複数指定）
 ├── out/                         # tsc/esbuildのビルド出力。gitignore対象
 ├── .vscode/                     # launch.json（F5でExtension Development Host起動）等
 ├── package.json                 # 拡張マニフェスト（name/contributes/scripts等）
@@ -41,7 +50,7 @@ vscode-gws-extension/
 ├── CHANGELOG.md
 ├── docs/
 │   ├── README.md             # docs配下の目次
-│   ├── spec/                 # 拡張本体の機能仕様（正史。現時点では未実装のため空）
+│   ├── spec/                 # 拡張本体の機能仕様（正史。実装完了のたびに最新仕様へ上書きする）
 │   └── ddr/                  # 意思決定ログ（DDR。追記のみ）
 ├── dev-tools/
 │   ├── src/
