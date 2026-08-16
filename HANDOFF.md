@@ -16,11 +16,11 @@ AI⇔AI/AI⇔人間の状況引継ぎメモ。常に「このブランチの現�
 
 | 進捗 | flow-id | ステップ | 担当 |
 |----|---|---|---|
-| [] | 1 | issueを起票する（`.github/ISSUE_TEMPLATE/task.md` / `.gitlab/issue_templates/task.md` で目的・現状・期待する動作・受け入れ条件を記載） | 人間 |
-| [] | 2 | issueの内容を取得する | `start <issue番号>` |
-| [] | 3 | featureブランチ（`feature-<issue番号>-<slug>`）とDraft MRを作成する（既にあれば `sync` のみ） | `start` |
-| [] | 4 | Planモードで実行手順を作成する（`plans/` へ出力・コミット。このタイミングで `worklog/日付_<plan名>.md` を作成） | エージェント |
-| [] | 5 | Planに合意する | 人間 |
+| [x] | 1 | issueを起票する（`.github/ISSUE_TEMPLATE/task.md` / `.gitlab/issue_templates/task.md` で目的・現状・期待する動作・受け入れ条件を記載） | 人間 |
+| [x] | 2 | issueの内容を取得する | `start <issue番号>` |
+| [x] | 3 | featureブランチ（`feature-<issue番号>-<slug>`）とDraft MRを作成する（既にあれば `sync` のみ） | `start` |
+| [x] | 4 | Planモードで実行手順を作成する（`plans/` へ出力・コミット。このタイミングで `worklog/日付_<plan名>.md` を作成） | エージェント |
+| [x] | 5 | Planに合意する | 人間 |
 | [] | 6 | commit, push してレビュー依頼を行う | エージェント |
 | [] | 7 | MRで再度planについてレビュー・コメントする。レビュー完了済み連絡をするまで以降の作業は行わない。 | 人間 |
 | [] | 8 | レビュー内容を取得し、planを修正する。対応が完了したコメントには対応内容を返信する（7〜8を合意まで繰り返す） | `comments` / `reply` |
@@ -42,11 +42,27 @@ AI⇔AI/AI⇔人間の状況引継ぎメモ。常に「このブランチの現�
 
 ## やったこと
 
-（なし）
+- issue #6（reactで左サイドバーのwebviewサンプルを作成する）を起点に着手。issue本文はテンプレートのまま
+  未記入だったため、ユーザーへ目的・技術構成をヒアリングした。
+  - 目的: サイドバーに表示するReact Webviewサンプルに、何かアクションを起こすボタンを置き、
+    右クリックメニューから外部送信（issue #4で作った `POST /analyze` 相当の仕組み）につなげられる
+    ようにしたい、とのこと。
+  - 技術構成（ビルドツール・`src/webview/`配下の構成等）はエージェントに一任。
+- `feature-6-react-webview` ブランチをmainから作成・push。
+- Draft PR [#8](https://github.com/yuki-matsu783/vscode-gws-extension/pull/8) を作成
+  （初回作成時は「No commits between main and feature-6-react-webview」で失敗したが、
+  `Provider.sh`内の空コミットによる自動リトライで成功）。
+
+- Plan（`plans/imperative-purring-tarjan.md`）を作成しユーザー承認を得た。概要:
+  `src/webview/`を新設しesbuildでReactをバンドル、`WebviewViewProvider`からサイドバーに表示、
+  ボタン押下で既存の`vscode-gws-extension.sendFileToApi`コマンドを`executeCommand`で呼び出す
+  （fetch実装は再利用し二重実装しない）。
+- `worklog/20260816_imperative-purring-tarjan.md` を作成した。
 
 ## 次にやること
 
-（なし。次のタスクはissueを起票し `/issue-mr-flow start <issue番号>` から開始する）
+- flow-id 6: plan/worklog/HANDOFFをcommit・push。`describe`でPR descriptionを更新し、
+  人間のplanレビュー（flow-id 7）を待つ。
 
 ## 判断を迷った内容
 
