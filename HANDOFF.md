@@ -29,11 +29,11 @@ AI⇔AI/AI⇔人間の状況引継ぎメモ。常に「このブランチの現�
 | [x] | 11 | planをもとに作業を進める、作業内容はworklogに更新する | エージェント |
 | [x] | 12 | commit, push してレビュー依頼を行う | エージェント |
 | [x] | 13 | 作業内容をもとにMR descriptionを更新する | `describe` |
-| [] | 14 | MRでレビュー・コメントする | 人間 |
-| [] | 15 | レビュー内容を取得し、実装・ドキュメントを修正する。対応が完了したコメントには対応内容を返信する（11〜15の作業ループを合意まで繰り返す） | `comments` / `reply` |
-| [] | 16 | 設計反映: `plans/` `worklog/` の内容を `docs/spec/` `docs/ddr/` へ反映する | エージェント |
-| [] | 17 | AIアセット改善: 作業中に気づいたルール・スキルの不備があれば `.claude/rules/` `.claude/skills/` `CLAUDE.md` `AGENTS.md` に反映する | エージェント |
-| [] | 18 | commit, push してレビュー依頼を行う | エージェント |
+| [x] | 14 | MRでレビュー・コメントする | 人間 |
+| [x] | 15 | レビュー内容を取得し、実装・ドキュメントを修正する。対応が完了したコメントには対応内容を返信する（11〜15の作業ループを合意まで繰り返す） | `comments` / `reply` |
+| [x] | 16 | 設計反映: `plans/` `worklog/` の内容を `docs/spec/` `docs/ddr/` へ反映する | エージェント |
+| [x] | 17 | AIアセット改善: 作業中に気づいたルール・スキルの不備があれば `.claude/rules/` `.claude/skills/` `CLAUDE.md` `AGENTS.md` に反映する | エージェント |
+| [x] | 18 | commit, push してレビュー依頼を行う | エージェント |
 | [] | 19 | MRでレビュー・コメントする | 人間 |
 | [] | 20 | レビュー内容を取得し、設計反映・AIアセットの内容を修正する。対応が完了したコメントには対応内容を返信する（16〜20を合意まで繰り返す） | `comments` / `reply` |
 | [] | 21 | `plans/` `worklog/` を削除し、`HANDOFF.md` を次タスクへリセットする | エージェント |
@@ -51,11 +51,22 @@ AI⇔AI/AI⇔人間の状況引継ぎメモ。常に「このブランチの現�
   `src/test/extension.test.ts`（コマンド登録テスト追加）を実装し、compile/lint/testすべて成功を確認。
 - commit・push・PR #5 description更新まで完了。
 
+- 「レビュー済み」の合図を受けて `comments all` で未解決コメントを再確認 → 0件（自動投稿の
+  対応工数レポートのみ、formalレビューも無し）だったため、設計反映（flow-id 16〜17）に進んだ。
+- `docs/spec/右クリックで外部APIへリクエストを送信する.md`（初のspec）、
+  `docs/ddr/0003-右クリックメニューから外部APIへ送るサンプルのコントラクトを決める.md` を作成し、
+  `docs/README.md`の目次・`docs/`配下の`index.jsonl`を更新。
+- `.claude/skills/vscode-extension-implement/SKILL.md`（TODOプレースホルダー）に、コマンド登録
+  テストで`activate()`が必要になる等の実装知見を暫定メモとして追記（TODOステータス自体は維持）。
+- commit・push・PR description更新まで完了。
+
 ## 次にやること
 
-- PR #5 のレビュー（flow-id 14）待ち。レビューコメントが付いたら `/issue-mr-flow comments` で取得し対応する。
+- PR #5 の設計反映後レビュー（flow-id 19）待ち。レビューコメントが付いたら
+  `/issue-mr-flow comments` で取得し対応する。
 - F5でのExtension Development Host起動による目視確認（コンテキストメニュー表示・Python API未起動時の
   エラーメッセージ表示）は未実施のため、レビュー前後いずれかのタイミングで実施が望ましい。
+- レビュー完了後、flow-id 21（`plans/` `worklog/` 削除・HANDOFF.mdリセット）→ 22（Draft解除）へ進む。
 
 ## 判断を迷った内容
 
