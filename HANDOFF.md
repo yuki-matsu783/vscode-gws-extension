@@ -29,10 +29,10 @@ AI⇔AI/AI⇔人間の状況引継ぎメモ。常に「このブランチの現�
 | [x] | 11 | planをもとに作業を進める、作業内容はworklogに更新する | エージェント |
 | [x] | 12 | commit, push してレビュー依頼を行う | エージェント |
 | [x] | 13 | 作業内容をもとにMR descriptionを更新する | `describe` |
-| [] | 14 | MRでレビュー・コメントする | 人間 |
-| [] | 15 | レビュー内容を取得し、実装・ドキュメントを修正する。対応が完了したコメントには対応内容を返信する（11〜15の作業ループを合意まで繰り返す） | `comments` / `reply` |
-| [] | 16 | 設計反映: `plans/` `worklog/` の内容を `docs/spec/` `docs/ddr/` へ反映する | エージェント |
-| [] | 17 | AIアセット改善: 作業中に気づいたルール・スキルの不備があれば `.claude/rules/` `.claude/skills/` `CLAUDE.md` `AGENTS.md` に反映する | エージェント |
+| [x] | 14 | MRでレビュー・コメントする | 人間 |
+| [x] | 15 | レビュー内容を取得し、実装・ドキュメントを修正する。対応が完了したコメントには対応内容を返信する（11〜15の作業ループを合意まで繰り返す） | `comments` / `reply` |
+| [x] | 16 | 設計反映: `plans/` `worklog/` の内容を `docs/spec/` `docs/ddr/` へ反映する | エージェント |
+| [x] | 17 | AIアセット改善: 作業中に気づいたルール・スキルの不備があれば `.claude/rules/` `.claude/skills/` `CLAUDE.md` `AGENTS.md` に反映する | エージェント |
 | [] | 18 | commit, push してレビュー依頼を行う | エージェント |
 | [] | 19 | MRでレビュー・コメントする | 人間 |
 | [] | 20 | レビュー内容を取得し、設計反映・AIアセットの内容を修正する。対応が完了したコメントには対応内容を返信する（16〜20を合意まで繰り返す） | `comments` / `reply` |
@@ -52,11 +52,15 @@ AI⇔AI/AI⇔人間の状況引継ぎメモ。常に「このブランチの現�
   `worklog/20260816_smooth-sauteeing-sunbeam.md`）。
 - `tsconfig.json`に`参考ディレクトリ/`を`exclude`追加し`npm run compile` / `npm run lint`成功を確認。
 - `.claude/rules/directory-structure.md`, `DEVELOPERS.md`, `index.md`のTODOを実態に合わせて更新。
+- ユーザー報告のF5デバッグ起動タイムアウトを`--disable-extensions`でのデバッガ無し起動により切り分け、
+  拡張自体（Hello World通知表示）は正常動作することを確認（コード変更は不要と判断）。
+- Plan/worklogの内容を`docs/ddr/0002-yo-codeでTypeScript拡張機能の雛形を作成する.md`へ設計反映。
 
 ## 次にやること
 
-- flow-id 12: 実装をcommit・pushし、PR上でレビュー依頼を行う。
-- レビュー合意（flow-id 14〜15）後、flow-id 16〜20（設計反映・AIアセット改善・レビュー）へ進む。
+- flow-id 18: 設計反映（DDR 0002追加）をcommit・pushし、PR上でレビュー依頼を行う。
+- レビュー合意（flow-id 19〜20）後、flow-id 21（plans/worklog削除・HANDOFF.mdリセット）〜23
+  （Draft解除・マージ。マージは人間が実施）へ進む。
 
 ## 判断を迷った内容
 
