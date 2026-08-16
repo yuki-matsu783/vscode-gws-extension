@@ -27,7 +27,17 @@ plan: `plans/floofy-splashing-sparrow.md`
 - issue #6のペアリング（Provider/index.tsx/App.tsx/vscodeApi.ts）をそのまま踏襲しつつ、
   `SidebarViewProvider`と`EditorPanelProvider`が共有するCSP/nonce生成ロジックを
   `getWebviewHtml.ts`に抽出する設計で合意（コード重複によるCSPドリフトリスクを避ける）。
-- esbuildの`entryPoints`を配列化するだけで既存`main.js`の出力を変えずに2バンドル化できる見込み。
+- esbuildの`entryPoints`を配列化するだけで既存`main.js`の出力を変えずに2バンドル化できた
+  （`{ in: 'src/webview/index.tsx', out: 'main' }` / `{ in: '...editorPanelIndex.tsx', out: 'editorPanel' }`、
+  `outfile`→`outdir: 'out/webview'`）。
+- plan通りに実装（`esbuild.js`複数entry point化 → `getWebviewHtml.ts`抽出・`SidebarViewProvider.ts`置き換え →
+  `EditorApp.tsx`/`editorPanelIndex.tsx` → `EditorPanelProvider.ts` → `extension.ts`コマンド登録 →
+  `package.json`の`contributes.commands`追加 → `extension.test.ts`アサーション追加）。
+  `npm run compile` / `npm run lint` / `npm test`（既存3件）すべてパス。
+- F5相当の動作確認として、一時テストファイル（コミットしない）で実際のExtension Development Host上
+  から`openEditorPanel`コマンドを実行し、`vscode.window.tabGroups`でWebviewPanelタブが1つ開くこと、
+  2回目実行でも新規パネルが増えず（シングルトン管理＝`reveal`が機能）1つのままであることを検証した。
+  確認後は一時ファイルを削除済み（恒久テストとしては追加しない、というplanの方針通り）。
 
 ## ダメだったこと
 
@@ -35,8 +45,8 @@ plan: `plans/floofy-splashing-sparrow.md`
 
 ## 次の一歩
 
-- plan通りに実装を進める（`esbuild.js`複数entry point化 → `getWebviewHtml.ts`抽出 →
-  `EditorApp.tsx`/`editorPanelIndex.tsx` → `EditorPanelProvider.ts` → `extension.ts`/
-  `package.json`/テスト更新 → compile/lint/test → F5動作確認）。
+- フローステップ12（commit, push してレビュー依頼）へ進む。
+- フローステップ16（設計反映）で`docs/spec/メインエディタにReact Webviewを表示する.md`・
+  `docs/ddr/0005-メインエディタReact-Webviewサンプルの技術構成を決める.md`を作成する。
 
 ---

@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { getWebviewHtml } from './getWebviewHtml';
 
 // サイドバー（Activity Bar）に表示するReact Webviewサンプル。
 // ボタン押下 → postMessage → 既存の vscode-gws-extension.sendFileToApi コマンドを実行する、という
@@ -19,7 +20,7 @@ export class SidebarViewProvider implements vscode.WebviewViewProvider {
 			localResourceRoots: [this.extensionUri],
 		};
 
-		webviewView.webview.html = this.getHtml(webviewView.webview);
+		webviewView.webview.html = getWebviewHtml(webviewView.webview, this.extensionUri, ['out', 'webview', 'main.js']);
 
 		webviewView.webview.onDidReceiveMessage((message: WebviewMessage) => {
 			if (message.type === 'sendFileToApi') {
@@ -27,33 +28,4 @@ export class SidebarViewProvider implements vscode.WebviewViewProvider {
 			}
 		});
 	}
-
-	private getHtml(webview: vscode.Webview): string {
-		const scriptUri = webview.asWebviewUri(
-			vscode.Uri.joinPath(this.extensionUri, 'out', 'webview', 'main.js')
-		);
-		const nonce = getNonce();
-
-		return /* html */ `<!DOCTYPE html>
-<html lang="ja">
-<head>
-	<meta charset="UTF-8">
-	<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'nonce-${nonce}';">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body>
-	<div id="root"></div>
-	<script nonce="${nonce}" src="${scriptUri}"></script>
-</body>
-</html>`;
-	}
-}
-
-function getNonce(): string {
-	const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-	let text = '';
-	for (let i = 0; i < 32; i++) {
-		text += chars.charAt(Math.floor(Math.random() * chars.length));
-	}
-	return text;
 }

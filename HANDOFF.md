@@ -26,7 +26,7 @@ AI⇔AI/AI⇔人間の状況引継ぎメモ。常に「このブランチの現�
 | [x] | 8 | レビュー内容を取得し、planを修正する。対応が完了したコメントには対応内容を返信する（7〜8を合意まで繰り返す） | `comments` / `reply` |
 | [x] | 9 | planをもとにMR descriptionを更新する | `describe` |
 | [] | 10 | コンテキスト削減のためにセッションをcompactする | 人間 |
-| [] | 11 | planをもとに作業を進める、作業内容はworklogに更新する | エージェント |
+| [x] | 11 | planをもとに作業を進める、作業内容はworklogに更新する | エージェント |
 | [] | 12 | commit, push してレビュー依頼を行う | エージェント |
 | [] | 13 | 作業内容をもとにMR descriptionを更新する | `describe` |
 | [] | 14 | MRでレビュー・コメントする | 人間 |
@@ -48,13 +48,18 @@ AI⇔AI/AI⇔人間の状況引継ぎメモ。常に「このブランチの現�
 - Plan作成: `plans/floofy-splashing-sparrow.md`（`vscode.window.createWebviewPanel`を使った
   `EditorPanelProvider`の新規実装、`getWebviewHtml.ts`共通化、esbuild複数entry point化 等）。
   ユーザー承認済み。worklog: `worklog/20260817_floofy-splashing-sparrow.md`。
+- planレビュー完了（未解決スレッド0件）、PR [#9](https://github.com/yuki-matsu783/vscode-gws-extension/pull/9)のdescriptionをplan内容で更新。
+- plan通りに実装完了: `esbuild.js`複数entry point化、`src/webview/getWebviewHtml.ts`新設・
+  `SidebarViewProvider.ts`をこれに置き換え、`EditorApp.tsx`/`editorPanelIndex.tsx`/
+  `EditorPanelProvider.ts`新規作成、`extension.ts`にコマンド`vscode-gws-extension.openEditorPanel`登録、
+  `package.json`の`contributes.commands`追加、`extension.test.ts`にアサーション追加。
+  `npm run compile`/`lint`/`test`（3件）すべてパス。一時テストで実際にExtension Development Host上
+  からパネルオープン・シングルトン動作（2回目実行でreveal）を検証済み（検証後に一時ファイルは削除）。
 
 ## 次にやること
 
-- ユーザーから「レビューOK」を受領。`comments all`で未解決スレッド0件を確認済み（PR上のコメントは
-  自動投稿の工数レポートのみ）。PR [#9](https://github.com/yuki-matsu783/vscode-gws-extension/pull/9)のdescriptionもplan内容で更新済み。
-- 次セッション（またはこのままcompact後）で`plans/floofy-splashing-sparrow.md`の実装ステップ1〜9に
-  沿って実装を進める（フローステップ11〜）。
+- 実装差分をcommit・pushしてレビュー依頼（フローステップ12）、その後PR descriptionを実装内容で
+  更新（フローステップ13）。
 
 ## 判断を迷った内容
 
