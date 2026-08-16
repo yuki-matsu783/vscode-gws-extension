@@ -28,6 +28,11 @@ keywords: [WebviewViewProvider, esbuild, acquireVsCodeApi, sendFileToApi]
 - [x] flow-id 7〜9: 人間から「レビューOK」の合図。`get_mr_unresolved_comments 8 true`で
   未解決コメント0件（自動投稿の工数レポートのみ）と確認し、次へ進んだ。
 - [x] flow-id 11: 実装完了（下記「試したこと・判明したこと」参照）。
+- [x] flow-id 12〜13: commit・push（[890a2e0](https://github.com/yuki-matsu783/vscode-gws-extension/commit/890a2e0)）、
+  PR description更新。
+- [x] flow-id 14〜15: F5でのユーザー目視確認（ボタン押下でステータス表示が想定どおり出ることを確認）→
+  「レビューOK」の合図。`get_mr_unresolved_comments 8 true`で未解決コメント0件を再確認し、次へ進んだ。
+- [x] flow-id 16〜17: 設計反映・AIアセット改善（下記「設計反映・AIアセット改善」参照）。
 
 ## 試したこと・判明したこと
 
@@ -55,15 +60,32 @@ keywords: [WebviewViewProvider, esbuild, acquireVsCodeApi, sendFileToApi]
   Explorerへフォールバックしていた。IDを`vscode-gws-extension-sidebar`（ドット→ハイフン）へ
   修正し、`src/test/extension.test.ts`の参照キーも合わせて修正。修正後は該当警告が消え、
   `npm test`が3件とも成功することを確認した。
-  **この知見はAIアセット改善（flow-id 17）で`.claude/skills/vscode-extension-implement/SKILL.md`
-  の暫定メモへ追記する。**
+  **この知見はAIアセット改善（flow-id 17）で反映する。**
 - `npm test`はheadlessなExtension Development Hostを実際に起動するため、上記の
   「View containerが登録されているか」の間接検証（警告有無）は自動テストで拾えたが、
   Activity Barアイコン・webview内のReactボタンの見た目自体はF5でのGUI目視確認が必要
-  （このセッションはGUI操作不可のため未実施。ユーザー側での確認を依頼する）。
+  （このセッションはGUI操作不可のため未実施だったが、flow-id 14でユーザーがF5確認済み。
+  想定どおりのボタン・ステータス表示だったとの報告を受けた）。
+
+## 設計反映・AIアセット改善（flow-id 16〜17）
+
+- `docs/spec/サイドバーにReact Webviewを表示する.md`を新規作成（issue #4のspecと同じ章立て）。
+- `docs/ddr/0004-サイドバーReact-Webviewサンプルの技術構成を決める.md`を新規作成
+  （esbuild採用・拡張ホストのtscビルドは変更しない・`src/webview/`分離・
+  postMessageで既存コマンドを再利用・`viewsContainers` idのドット制約、の4決定を記録）。
+- `docs/README.md`・`index.md`に上記2ファイルへのリンク・記述更新を反映。
+- **AIアセット改善**: `.claude/rules/directory-structure.md`の「TODO: 拡張本体のディレクトリ構成」
+  節がまさに本issueで解消することを指示していたため対応。
+  - `.claude/rules/vscode-extension-style.md`を新規作成（TypeScript/React Webviewのコーディング
+    規約。issue #4・#6双方の実装で判明した知見をまとめて集約）。
+  - `.claude/skills/vscode-extension-implement/SKILL.md`のTODOプレースホルダーを解消し、
+    具体的な実装サブフローとして書き起こした。
+  - `.claude/agents/vscode-extension-code-reviewer.md`のTODOプレースホルダーを解消し、
+    4つのレビュー観点を具体化した。
+  - `.claude/rules/directory-structure.md`の該当TODO節を、実際に決定した構成の説明へ置き換えた。
+- `dev-tools/src/extract-frontmatter.sh docs` / `.claude` で`index.jsonl`群を再生成
+  （新規spec/ddr/rule/skill/agentファイルをインデックスへ反映）。
 
 ## 次にやること
 
-- flow-id 12: commit・push・レビュー依頼。
-- ユーザーにF5でのExtension Development Host起動による目視確認（Activity Barアイコン表示・
-  サイドバーwebviewのボタン動作）を依頼する。
+- flow-id 18: commit・push・レビュー依頼。

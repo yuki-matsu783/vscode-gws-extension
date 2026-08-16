@@ -13,17 +13,20 @@ keywords: [directory, repository-map, リポジトリマップ, ディレクト�
 個別ファイルの役割は [.claude/rules/directory-structure.md](.claude/rules/directory-structure.md) を、
 ドキュメントの置き場所・ライフサイクルは [.claude/rules/docs-workflow.md](.claude/rules/docs-workflow.md) を参照。
 
-拡張本体は `yo code`（generator-code）によるTypeScript雛形（issue #2）がリポジトリ直下に存在する
-（React Webviewは未実装）。`src/`配下のレイアウト詳細は`.claude/rules/directory-structure.md`の
-TODO節を参照。
+拡張本体は `yo code`（generator-code）によるTypeScript雛形（issue #2）に、右クリックメニュー→外部API
+送信サンプル（issue #4）とサイドバーReact Webviewサンプル（issue #6）を実装した状態でリポジトリ直下に
+存在する。`src/`配下のレイアウト詳細は`.claude/rules/directory-structure.md`を参照。
 
 ## Directory Structure
 
-- [./src/](./src/) 拡張本体のソースコード（`extension.ts`がエントリポイント、`src/test/`にテスト）。
+- [./src/](./src/) 拡張本体のソースコード（`extension.ts`がエントリポイント、`src/webview/`にReact
+  Webviewのソース、`src/test/`にテスト）。
+- [./media/](./media/) 拡張のUIアセット（Activity Barアイコン等）。
+- [./esbuild.js](./esbuild.js) `src/webview/`を`out/webview/main.js`へバンドルするビルドスクリプト。
 - [./.vscode/](./.vscode/) VS Code自体の実行・デバッグ設定（`launch.json`でF5からExtension
   Development Hostを起動）。
 - [./docs/](./docs/) 拡張本体の設計ドキュメント。
-  - [./docs/spec/](./docs/spec/) 機能ごとの正史仕様（最新の仕様を上書き更新）。現時点では未実装のため空。
+  - [./docs/spec/](./docs/spec/) 機能ごとの正史仕様（最新の仕様を上書き更新）。
   - [./docs/ddr/](./docs/ddr/) 意思決定ログ（DDR: Design Decision Record。追記のみ）。
 - [./dev-tools/](./dev-tools/) 開発者向けツール一式。アプリ本体（`docs/`）とは分離して管理する。
   - [./dev-tools/src/](./dev-tools/src/) issue駆動MRワークフロー支援スクリプト等（bash）。

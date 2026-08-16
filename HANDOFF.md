@@ -29,10 +29,10 @@ AI⇔AI/AI⇔人間の状況引継ぎメモ。常に「このブランチの現�
 | [x] | 11 | planをもとに作業を進める、作業内容はworklogに更新する | エージェント |
 | [x] | 12 | commit, push してレビュー依頼を行う | エージェント |
 | [x] | 13 | 作業内容をもとにMR descriptionを更新する | `describe` |
-| [] | 14 | MRでレビュー・コメントする | 人間 |
-| [] | 15 | レビュー内容を取得し、実装・ドキュメントを修正する。対応が完了したコメントには対応内容を返信する（11〜15の作業ループを合意まで繰り返す） | `comments` / `reply` |
-| [] | 16 | 設計反映: `plans/` `worklog/` の内容を `docs/spec/` `docs/ddr/` へ反映する | エージェント |
-| [] | 17 | AIアセット改善: 作業中に気づいたルール・スキルの不備があれば `.claude/rules/` `.claude/skills/` `CLAUDE.md` `AGENTS.md` に反映する | エージェント |
+| [x] | 14 | MRでレビュー・コメントする | 人間 |
+| [x] | 15 | レビュー内容を取得し、実装・ドキュメントを修正する。対応が完了したコメントには対応内容を返信する（11〜15の作業ループを合意まで繰り返す） | `comments` / `reply` |
+| [x] | 16 | 設計反映: `plans/` `worklog/` の内容を `docs/spec/` `docs/ddr/` へ反映する | エージェント |
+| [x] | 17 | AIアセット改善: 作業中に気づいたルール・スキルの不備があれば `.claude/rules/` `.claude/skills/` `CLAUDE.md` `AGENTS.md` に反映する | エージェント |
 | [] | 18 | commit, push してレビュー依頼を行う | エージェント |
 | [] | 19 | MRでレビュー・コメントする | 人間 |
 | [] | 20 | レビュー内容を取得し、設計反映・AIアセットの内容を修正する。対応が完了したコメントには対応内容を返信する（16〜20を合意まで繰り返す） | `comments` / `reply` |
@@ -73,12 +73,21 @@ AI⇔AI/AI⇔人間の状況引継ぎメモ。常に「このブランチの現�
 - flow-id 12〜13: commit・push（[890a2e0](https://github.com/yuki-matsu783/vscode-gws-extension/commit/890a2e0)）、
   PR [#8](https://github.com/yuki-matsu783/vscode-gws-extension/pull/8) descriptionを実装状況で更新済み。
 
+- flow-id 14〜15: ユーザーがF5で目視確認（ボタン押下でステータス表示が想定どおり）→「レビューOK」の
+  合図。`get_mr_unresolved_comments 8 true`で未解決コメント0件を再確認し、次へ進んだ。
+- flow-id 16〜17: 設計反映（`docs/spec/サイドバーにReact Webviewを表示する.md`・
+  `docs/ddr/0004-サイドバーReact-Webviewサンプルの技術構成を決める.md`新規作成、
+  `docs/README.md`/`index.md`更新）とAIアセット改善
+  （`.claude/rules/vscode-extension-style.md`新規作成、`.claude/skills/vscode-extension-implement/SKILL.md`・
+  `.claude/agents/vscode-extension-code-reviewer.md`・`.claude/rules/directory-structure.md`の
+  TODO解消）を完了。詳細はworklog参照。
+
 ## 次にやること
 
-- flow-id 14: PR #8のレビューをお願いします。特にF5でのExtension Development Host起動による
-  Activity Barアイコン表示・サイドバーwebviewのボタン動作の目視確認をお願いしたいです
-  （このセッションはGUI操作不可のため未実施）。
-- レビューOKの連絡後、`comments all`で未解決コメント0件を再確認してから設計反映（flow-id 16〜）へ。
+- flow-id 18: commit・push・レビュー依頼。
+- flow-id 19: PR #8で設計反映・AIアセット改善内容のレビューをお願いします。
+- レビューOKの連絡後、`comments all`で未解決コメント0件を再確認してから
+  `plans/`/`worklog/`削除・HANDOFFリセット（flow-id 21）へ。
 
 ## 判断を迷った内容
 

@@ -1,7 +1,8 @@
-{"concept_id":".claude/rules/directory-structure","directory":".claude/rules","frontmatter":null,"mtime":"2026-08-16T15:54:22"}
+{"concept_id":".claude/rules/directory-structure","directory":".claude/rules","frontmatter":null,"mtime":"2026-08-17T00:15:20"}
 {"concept_id":".claude/rules/docs-workflow","directory":".claude/rules","frontmatter":null,"mtime":"2026-08-16T15:51:34"}
 {"concept_id":".claude/rules/git-workflow","directory":".claude/rules","frontmatter":null,"mtime":"2026-08-16T15:51:47"}
 {"concept_id":".claude/rules/markdown-frontmatter","directory":".claude/rules","frontmatter":null,"mtime":"2026-08-16T15:52:11"}
 {"concept_id":".claude/rules/plan-mode-safety","directory":".claude/rules","frontmatter":null,"mtime":"2026-08-16T15:52:43"}
 {"concept_id":".claude/rules/powershell-encoding","directory":".claude/rules","frontmatter":null,"mtime":"2026-08-16T15:53:05"}
 {"concept_id":".claude/rules/shell-script-style","directory":".claude/rules","frontmatter":null,"mtime":"2026-08-16T15:53:52"}
+{"concept_id":".claude/rules/vscode-extension-style","directory":".claude/rules","frontmatter":{"paths":["src/**/*.ts","src/**/*.tsx"],"title":"コーディングルール（TypeScript / VS Code拡張・React Webview）","type":"rule","description":"vscode-gws-extension本体（拡張ホスト・React Webview）のTypeScript/TSXコーディング規約","tags":["typescript","vscode-extension","react","webview","coding-style"],"keywords":["命名規則","activationEvents","WebviewViewProvider","postMessage","viewsContainers","fetch","AbortController","esbuild","acquireVsCodeApi","CSP","nonce"]},"mtime":"2026-08-17T00:13:57"}

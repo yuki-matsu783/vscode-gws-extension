@@ -10,18 +10,30 @@
 
 ## 現在のツリー
 
-拡張本体の最小限の雛形（`yo code` / generator-code によるTypeScript雛形。issue #2）が
-リポジトリ直下に配置されている。React Webviewはまだ含まれない（下記「TODO」節参照）。
+拡張本体は`yo code` / generator-codeによるTypeScript雛形（issue #2）に、右クリックメニュー→外部API
+送信サンプル（issue #4）とサイドバーReact Webviewサンプル（issue #6）を実装した状態。
 
 ```
 vscode-gws-extension/
 ├── src/
-│   ├── extension.ts            # 拡張のエントリポイント（activate/deactivate）
+│   ├── extension.ts            # 拡張のエントリポイント（activate/deactivate）。コマンド登録・
+│   │                            # WebviewViewProviderの登録を行う（実処理は極力持たない）
+│   ├── webview/                 # React Webview（サイドバーview等）のソース一式
+│   │   ├── SidebarViewProvider.ts # ホスト側: vscode.WebviewViewProvider実装、HTML生成・
+│   │   │                          # CSP/nonce設定、postMessage受信→コマンド実行の橋渡し
+│   │   ├── index.tsx              # webview側Reactエントリポイント（createRoot）
+│   │   ├── App.tsx                # Reactコンポーネント本体
+│   │   ├── vscodeApi.ts           # acquireVsCodeApi()の単一取得ラッパー
+│   │   └── tsconfig.json          # webview専用の型チェックtsconfig（jsx/DOM libを持つ。noEmit）
 │   └── test/                   # @vscode/test-cli によるテスト（extension.test.ts）
-├── out/                         # tscのビルド出力。gitignore対象
+├── media/
+│   └── icon.svg                 # Activity Bar用アイコン（contributes.viewsContainersから参照）
+├── esbuild.js                   # Webview（src/webview/）をout/webview/main.jsへバンドルするスクリプト
+├── out/                         # tsc/esbuildのビルド出力。gitignore対象
 ├── .vscode/                     # launch.json（F5でExtension Development Host起動）等
 ├── package.json                 # 拡張マニフェスト（name/contributes/scripts等）
-├── tsconfig.json                 # rootDir=src, outDir=out。参考ディレクトリ/はexclude
+├── tsconfig.json                 # 拡張ホスト側。rootDir=src, outDir=out。参考ディレクトリ/・
+│                                  # src/webview はexclude（webview側はsrc/webview/tsconfig.jsonで別途型チェック）
 ├── .vscodeignore                 # vsce package時の除外設定
 ├── eslint.config.mjs
 ├── .vscode-test.mjs
@@ -66,13 +78,18 @@ vscode-gws-extension/
 └── README.md
 ```
 
-## TODO: 拡張本体（src/）のディレクトリ構成（React Webview追加時に更新）
+## 拡張本体（src/）のディレクトリ構成
 
-`src/extension.ts` 単一ファイルの雛形段階（issue #2）のため、Webview実装を追加するissueで
-`src/extension/`, `src/webview/` 等への切り分けを決定し、この節を埋める形で本ファイルを更新すること
-（あわせて `.claude/skills/vscode-extension-implement/SKILL.md` と
-`.claude/agents/vscode-extension-code-reviewer.md` のTODOも解消する）。TypeScriptのコーディング規約
-（`.claude/rules/ahk-style.md`相当）も同様に未確定。
+issue #6（サイドバーReact Webviewサンプル）対応で、`src/extension.ts`（拡張ホスト）と
+`src/webview/`（React Webview）を分離する構成に決定した（経緯:
+[docs/ddr/0004-サイドバーReact-Webviewサンプルの技術構成を決める.md](../../docs/ddr/0004-サイドバーReact-Webviewサンプルの技術構成を決める.md)）。
+`src/extension.ts`を`src/extension/`ディレクトリへ分割する変更は、現状1ファイルで十分小さいため
+見送っている（拡張ホスト側のファイルが増えてきた場合に改めて検討する）。
+
+TypeScript/React Webviewのコーディング規約は
+[.claude/rules/vscode-extension-style.md](vscode-extension-style.md) に定義した
+（`.claude/skills/vscode-extension-implement/SKILL.md` と
+`.claude/agents/vscode-extension-code-reviewer.md` のTODOもあわせて解消済み）。
 
 ## 配置の指針
 
