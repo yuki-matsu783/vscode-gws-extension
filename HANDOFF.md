@@ -21,12 +21,12 @@ AI⇔AI/AI⇔人間の状況引継ぎメモ。常に「このブランチの現�
 | [x] | 3 | featureブランチ（`feature-<issue番号>-<slug>`）とDraft MRを作成する（既にあれば `sync` のみ） | `start` |
 | [x] | 4 | Planモードで実行手順を作成する（`plans/` へ出力・コミット。このタイミングで `worklog/日付_<plan名>.md` を作成） | エージェント |
 | [x] | 5 | Planに合意する | 人間 |
-| [] | 6 | commit, push してレビュー依頼を行う | エージェント |
-| [] | 7 | MRで再度planについてレビュー・コメントする。レビュー完了済み連絡をするまで以降の作業は行わない。 | 人間 |
-| [] | 8 | レビュー内容を取得し、planを修正する。対応が完了したコメントには対応内容を返信する（7〜8を合意まで繰り返す） | `comments` / `reply` |
-| [] | 9 | planをもとにMR descriptionを更新する | `describe` |
+| [x] | 6 | commit, push してレビュー依頼を行う | エージェント |
+| [x] | 7 | MRで再度planについてレビュー・コメントする。レビュー完了済み連絡をするまで以降の作業は行わない。 | 人間 |
+| [x] | 8 | レビュー内容を取得し、planを修正する。対応が完了したコメントには対応内容を返信する（7〜8を合意まで繰り返す） | `comments` / `reply` |
+| [x] | 9 | planをもとにMR descriptionを更新する | `describe` |
 | [] | 10 | コンテキスト削減のためにセッションをcompactする | 人間 |
-| [] | 11 | planをもとに作業を進める、作業内容はworklogに更新する | エージェント |
+| [x] | 11 | planをもとに作業を進める、作業内容はworklogに更新する | エージェント |
 | [] | 12 | commit, push してレビュー依頼を行う | エージェント |
 | [] | 13 | 作業内容をもとにMR descriptionを更新する | `describe` |
 | [] | 14 | MRでレビュー・コメントする | 人間 |
@@ -45,20 +45,25 @@ AI⇔AI/AI⇔人間の状況引継ぎメモ。常に「このブランチの現�
 - issue #2「VSCODEの拡張機能を作成するためのfirst stepを行う」を起点に、ブランチ
   `feature-2-vscode-first-step` とDraft PR [#3](https://github.com/yuki-matsu783/vscode-gws-extension/pull/3) を作成した。
 - スコープを「`yo code`（generator-code）でのTypeScript拡張機能の雛形作成〜F5デバッグ起動確認まで」に
-  絞ることをユーザーと合意し、Planを`plans/smooth-sauteeing-sunbeam.md`へ出力・承認済み。
-  worklogは`worklog/20260816_smooth-sauteeing-sunbeam.md`。
+  絞ることをユーザーと合意し、Planを`plans/smooth-sauteeing-sunbeam.md`へ出力・承認済み（レビューOK確認済み）。
+- `yo code . -t=ts --pkgManager=npm --gitInit=false -q` で雛形を生成（`--gitInit=false`が効かず
+  `.gitignore`衝突プロンプトで中断したが、他の生成物は書き込み済みだったため再実行はせず、
+  `.gitignore`への手動追記＋`npm install`で完結。詳細:
+  `worklog/20260816_smooth-sauteeing-sunbeam.md`）。
+- `tsconfig.json`に`参考ディレクトリ/`を`exclude`追加し`npm run compile` / `npm run lint`成功を確認。
+- `.claude/rules/directory-structure.md`, `DEVELOPERS.md`, `index.md`のTODOを実態に合わせて更新。
 
 ## 次にやること
 
-- flow-id 6: plan/worklogをcommit・pushし、PR上でレビュー依頼を行う。
-- レビュー合意（flow-id 7〜9）後、flow-id 11以降で実際に`yo code`を実行し、生成物確認・
-  `.gitignore`追記・`.claude/rules/directory-structure.md`と`DEVELOPERS.md`のTODO解消を行う。
+- flow-id 12: 実装をcommit・pushし、PR上でレビュー依頼を行う。
+- レビュー合意（flow-id 14〜15）後、flow-id 16〜20（設計反映・AIアセット改善・レビュー）へ進む。
 
 ## 判断を迷った内容
 
 - `yo code . -t=ts`実行時に生成される`README.md`が既存の全体アーキテクチャ説明README.mdと
-  衝突する問題。「事前退避→生成後に既存版を復元」で対応する方針をユーザーと合意済み
-  （詳細: `plans/smooth-sauteeing-sunbeam.md`）。
+  衝突する問題。「事前退避→生成後に既存版を復元」で対応する方針だったが、実際には
+  `.gitignore`衝突でプロセスが先に中断したためREADME.mdへは到達せず、退避したファイルは
+  結果的に不要だった（詳細: `plans/smooth-sauteeing-sunbeam.md`, worklog）。
 
 ## 未解決の内容
 
@@ -68,6 +73,8 @@ AI⇔AI/AI⇔人間の状況引継ぎメモ。常に「このブランチの現�
 - `.claude/skills/vscode-extension-implement/SKILL.md` /
   `.claude/agents/vscode-extension-code-reviewer.md` のTODOは本issueのスコープ外。コーディング規約が
   固まってきた次issue以降で解消する。
+- `--gitInit=false`がyargsの仕様上効かない可能性がある件（worklog参照）。将来同種のスクリプトを
+  再実行する場合は`--no-gitInit`を使うこと。
 
 ## 守るべき条件・触ってはいけない範囲
 

@@ -1,2 +1,10 @@
 /参考ディレクトリ/
 /.claude/usage-state/
+
+# VS Code拡張（yo code / generator-code の既定gitignore相当。
+# --gitInit=false指定時は自動生成されないため手動で追記）
+out
+dist
+node_modules
+.vscode-test/
+*.vsix
