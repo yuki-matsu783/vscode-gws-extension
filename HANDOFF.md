@@ -21,7 +21,7 @@ AI⇔AI/AI⇔人間の状況引継ぎメモ。常に「このブランチの現�
 | [x] | 3 | featureブランチ（`feature-<issue番号>-<slug>`）とDraft MRを作成する（既にあれば `sync` のみ） | `start` |
 | [x] | 4 | Planモードで実行手順を作成する（`plans/` へ出力・コミット。このタイミングで `worklog/日付_<plan名>.md` を作成） | エージェント |
 | [x] | 5 | Planに合意する | 人間 |
-| [] | 6 | commit, push してレビュー依頼を行う | エージェント |
+| [x] | 6 | commit, push してレビュー依頼を行う | エージェント |
 | [] | 7 | MRで再度planについてレビュー・コメントする。レビュー完了済み連絡をするまで以降の作業は行わない。 | 人間 |
 | [] | 8 | レビュー内容を取得し、planを修正する。対応が完了したコメントには対応内容を返信する（7〜8を合意まで繰り返す） | `comments` / `reply` |
 | [] | 9 | planをもとにMR descriptionを更新する | `describe` |
@@ -51,8 +51,9 @@ AI⇔AI/AI⇔人間の状況引継ぎメモ。常に「このブランチの現�
 
 ## 次にやること
 
-- `plans/floofy-splashing-sparrow.md`の実装ステップ1〜9に沿って実装を進める。
-- plan/worklogをcommit・pushしてレビュー依頼（フローステップ6）。
+- PR [#9](https://github.com/yuki-matsu783/vscode-gws-extension/pull/9)でplanのレビュー・コメントを待つ（フローステップ7）。
+- レビューOKの合図を受けたら`comments all`で未解決スレッドが無いことを確認したうえで、
+  `plans/floofy-splashing-sparrow.md`の実装ステップ1〜9に沿って実装を進める。
 
 ## 判断を迷った内容
 
