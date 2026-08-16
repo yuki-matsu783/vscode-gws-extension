@@ -16,19 +16,19 @@ AI⇔AI/AI⇔人間の状況引継ぎメモ。常に「このブランチの現�
 
 | 進捗 | flow-id | ステップ | 担当 |
 |----|---|---|---|
-| [] | 1 | issueを起票する（`.github/ISSUE_TEMPLATE/task.md` / `.gitlab/issue_templates/task.md` で目的・現状・期待する動作・受け入れ条件を記載） | 人間 |
-| [] | 2 | issueの内容を取得する | `start <issue番号>` |
-| [] | 3 | featureブランチ（`feature-<issue番号>-<slug>`）とDraft MRを作成する（既にあれば `sync` のみ） | `start` |
-| [] | 4 | Planモードで実行手順を作成する（`plans/` へ出力・コミット。このタイミングで `worklog/日付_<plan名>.md` を作成） | エージェント |
-| [] | 5 | Planに合意する | 人間 |
-| [] | 6 | commit, push してレビュー依頼を行う | エージェント |
+| [x] | 1 | issueを起票する（`.github/ISSUE_TEMPLATE/task.md` / `.gitlab/issue_templates/task.md` で目的・現状・期待する動作・受け入れ条件を記載） | 人間 |
+| [x] | 2 | issueの内容を取得する | `start <issue番号>` |
+| [x] | 3 | featureブランチ（`feature-<issue番号>-<slug>`）とDraft MRを作成する（既にあれば `sync` のみ） | `start` |
+| [x] | 4 | Planモードで実行手順を作成する（`plans/` へ出力・コミット。このタイミングで `worklog/日付_<plan名>.md` を作成） | エージェント |
+| [x] | 5 | Planに合意する | 人間 |
+| [x] | 6 | commit, push してレビュー依頼を行う | エージェント |
 | [] | 7 | MRで再度planについてレビュー・コメントする。レビュー完了済み連絡をするまで以降の作業は行わない。 | 人間 |
 | [] | 8 | レビュー内容を取得し、planを修正する。対応が完了したコメントには対応内容を返信する（7〜8を合意まで繰り返す） | `comments` / `reply` |
 | [] | 9 | planをもとにMR descriptionを更新する | `describe` |
 | [] | 10 | コンテキスト削減のためにセッションをcompactする | 人間 |
-| [] | 11 | planをもとに作業を進める、作業内容はworklogに更新する | エージェント |
-| [] | 12 | commit, push してレビュー依頼を行う | エージェント |
-| [] | 13 | 作業内容をもとにMR descriptionを更新する | `describe` |
+| [x] | 11 | planをもとに作業を進める、作業内容はworklogに更新する | エージェント |
+| [x] | 12 | commit, push してレビュー依頼を行う | エージェント |
+| [x] | 13 | 作業内容をもとにMR descriptionを更新する | `describe` |
 | [] | 14 | MRでレビュー・コメントする | 人間 |
 | [] | 15 | レビュー内容を取得し、実装・ドキュメントを修正する。対応が完了したコメントには対応内容を返信する（11〜15の作業ループを合意まで繰り返す） | `comments` / `reply` |
 | [] | 16 | 設計反映: `plans/` `worklog/` の内容を `docs/spec/` `docs/ddr/` へ反映する | エージェント |
@@ -42,21 +42,35 @@ AI⇔AI/AI⇔人間の状況引継ぎメモ。常に「このブランチの現�
 
 ## やったこと
 
-（なし）
+- issue #4「右クリックのコンテキストメニューを追加し、外部APIに向けてリクエストを送る機能のサンプルを
+  作成する」に対し、ブランチ `feature-4-api` / Draft PR #5 を作成。
+- issue本文が空だったため人間に確認し、外部API=README記載のPython API(FastAPI)想定、
+  コンテキストメニューはエディタ・エクスプローラー両方、リクエストは選択ファイルパスのPOST送信サンプル、
+  API URLはVS Code設定で持たせる、という前提を確定してPlanを作成・承認（`plans/zazzy-foraging-meerkat.md`）。
+- `package.json`（commands/menus/configuration追加）・`src/extension.ts`（`sendFileToApi`コマンド実装）・
+  `src/test/extension.test.ts`（コマンド登録テスト追加）を実装し、compile/lint/testすべて成功を確認。
+- commit・push・PR #5 description更新まで完了。
 
 ## 次にやること
 
-（なし。次のタスクはissueを起票し `/issue-mr-flow start <issue番号>` から開始する）
+- PR #5 のレビュー（flow-id 14）待ち。レビューコメントが付いたら `/issue-mr-flow comments` で取得し対応する。
+- F5でのExtension Development Host起動による目視確認（コンテキストメニュー表示・Python API未起動時の
+  エラーメッセージ表示）は未実施のため、レビュー前後いずれかのタイミングで実施が望ましい。
 
 ## 判断を迷った内容
 
-（なし）
+- flow-id 6〜10（plan単独でのMRレビュー往復）を独立して行わず、Planモード内での人間承認（flow-id 5）を
+  もって直ちに実装（flow-id 11〜13）へ進み、plan・worklog・実装をまとめて1コミットでpush、PR description
+  も実装状況まで含めて一度に更新した。plan自体の複雑さが低く、Planモードでの承認を得ていたため効率を優先。
+  次のレビュー（flow-id 14）でplanと実装の両方がまとめてレビュー対象になる点は把握しておくこと。
 
 ## 未解決の内容
 
 - issue #2の後続として、`.claude/skills/vscode-extension-implement/SKILL.md` /
   `.claude/agents/vscode-extension-code-reviewer.md` のTODO（TypeScriptコーディング規約・
   コードレビュー観点の策定）が残っている。React Webview追加などの次の実装issueで着手する。
+- issue #4のPython API側エンドポイント契約（`POST /analyze`, body `{ path }`）は本リポジトリ側で
+  仮に定めたもの。Python API実装リポジトリ側との正式なすり合わせは未実施。
 
 ## 守るべき条件・触ってはいけない範囲
 
