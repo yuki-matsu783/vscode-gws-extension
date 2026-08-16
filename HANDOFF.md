@@ -54,7 +54,9 @@ AI⇔AI/AI⇔人間の状況引継ぎメモ。常に「このブランチの現�
 
 ## 未解決の内容
 
-（なし）
+- issue #2の後続として、`.claude/skills/vscode-extension-implement/SKILL.md` /
+  `.claude/agents/vscode-extension-code-reviewer.md` のTODO（TypeScriptコーディング規約・
+  コードレビュー観点の策定）が残っている。React Webview追加などの次の実装issueで着手する。
 
 ## 守るべき条件・触ってはいけない範囲
 

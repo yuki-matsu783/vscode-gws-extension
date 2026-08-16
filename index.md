@@ -13,12 +13,15 @@ keywords: [directory, repository-map, リポジトリマップ, ディレクト�
 個別ファイルの役割は [.claude/rules/directory-structure.md](.claude/rules/directory-structure.md) を、
 ドキュメントの置き場所・ライフサイクルは [.claude/rules/docs-workflow.md](.claude/rules/docs-workflow.md) を参照。
 
-着手時点ではソースコードが存在せず、以下は開発フロー・ドキュメント・AI資産に関するディレクトリの
-みを説明する。拡張本体（VS Code拡張、TypeScript/React Webview想定）の`src/`等のレイアウトは未確定
-（`.claude/rules/directory-structure.md`のTODO節参照）。決まり次第この節を追記すること。
+拡張本体は `yo code`（generator-code）によるTypeScript雛形（issue #2）がリポジトリ直下に存在する
+（React Webviewは未実装）。`src/`配下のレイアウト詳細は`.claude/rules/directory-structure.md`の
+TODO節を参照。
 
 ## Directory Structure
 
+- [./src/](./src/) 拡張本体のソースコード（`extension.ts`がエントリポイント、`src/test/`にテスト）。
+- [./.vscode/](./.vscode/) VS Code自体の実行・デバッグ設定（`launch.json`でF5からExtension
+  Development Hostを起動）。
 - [./docs/](./docs/) 拡張本体の設計ドキュメント。
   - [./docs/spec/](./docs/spec/) 機能ごとの正史仕様（最新の仕様を上書き更新）。現時点では未実装のため空。
   - [./docs/ddr/](./docs/ddr/) 意思決定ログ（DDR: Design Decision Record。追記のみ）。

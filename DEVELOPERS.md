@@ -14,18 +14,24 @@ keywords: [vscode拡張, typescript, ディレクトリ構成, 正史仕様, iss
 
 ## 動作環境
 
-**TODO**: 拡張本体（VS Code拡張、TypeScript/React Webview）のソースコードがまだ存在しないため未確定。
-実装着手時にNode.js/npmのバージョン等をここに記載する。
+- Node.js / npm: `package.json` の `engines` は現時点で明示していないが、動作確認は
+  Node.js v22.15.0 / npm 10.8.2 で行った（`yo code`実行時の`npm warn EBADENGINE`より、devDependency
+  の一部（`which@7.0.0`）はNode 22.22.2以降を要求している。実害は確認されていないが、Nodeの
+  バージョンを上げる場合はこの点に留意する）。
+- VS Code本体のバージョン要件は `package.json` の `engines.vscode`（`^1.125.0`）を正とする。
 
 ## ソースから実行する
 
-**TODO**: ソースコード未着手のため未確定。
+1. `npm install` で依存関係をインストールする。
+2. VS Codeでこのリポジトリを開き、`F5`（`Run Extension`）でExtension Development Hostを起動する
+   （`.vscode/launch.json`の`preLaunchTask`により`npm run compile`が自動実行される）。
+3. 起動したウィンドウでコマンドパレットから `Hello World` コマンドを実行すると動作確認できる
+   （`src/extension.ts`のサンプル実装。issue #2時点ではこのサンプルのみで、React Webviewは未実装）。
 
 ## ディレクトリ構成
 
 詳細は [.claude/rules/directory-structure.md](.claude/rules/directory-structure.md) を参照
-（現時点では開発フロー・ドキュメント・AI資産に関するメタ構成のみが決まっており、拡張本体の
-`src/`レイアウトはTODOのまま）。
+（拡張本体は`src/extension.ts`単一ファイルの雛形段階。Webview追加時のレイアウト詳細はTODOのまま）。
 
 主な機能とその正史仕様（`docs/spec/`）は [docs/README.md](docs/README.md) を参照
 （現時点では未実装のため登録なし）。
@@ -41,11 +47,21 @@ keywords: [vscode拡張, typescript, ディレクトリ構成, 正史仕様, iss
 ## テスト
 
 `tests/` 配下に、`dev-tools/`配下のbashスクリプトに対する単体テストがある。一覧・実行方法は
-[tests/README.md](tests/README.md) を参照。拡張本体のテストフレームワーク・配置ルールは未確定。
+[tests/README.md](tests/README.md) を参照。
+
+拡張本体のテストは `src/test/`（`@vscode/test-cli` / `@vscode/test-electron`。`yo code`生成の雛形）に
+配置し、`npm test` で実行する。配置ルールの詳細化はTODO。
 
 ## ビルド
 
-**TODO**: `vsce package`等によるパッケージング方針は未確定。
+- `npm run compile`: `tsc -p ./` で `src/` を `out/` へコンパイルする（1回限り）。
+- `npm run watch`: ファイル変更を監視しながらコンパイルする。
+- `npm run lint`: `eslint src` でLintを実行する。
+- `npm test`: `vscode-test`（`@vscode/test-cli`）でテストを実行する（`pretest`で`compile`と`lint`が
+  先に走る）。
+
+**TODO**: `vsce package`によるパッケージング・Marketplace配布方針は未確定
+（webpack/esbuildによるバンドル化も未実施。現状は`unbundled`のプレーンな`tsc`ビルド）。
 
 ## リリース時の手順
 
@@ -53,7 +69,7 @@ keywords: [vscode拡張, typescript, ディレクトリ構成, 正史仕様, iss
 
 ## 未整備・今後整理する点
 
-- 拡張本体（`src/`等）のディレクトリ構成・コーディング規約・ビルド／パッケージング／リリース手順は
-  すべて未確定（`.claude/rules/directory-structure.md`のTODO節参照）。
-- 実装着手時に、本ファイルの各TODO節・`.claude/skills/vscode-extension-implement/SKILL.md`・
+- React Webview追加時の`src/`ディレクトリ構成の切り分け・TypeScriptコーディング規約・
+  パッケージング／リリース手順は未確定（`.claude/rules/directory-structure.md`のTODO節参照）。
+- Webview実装着手時に、本ファイルの残TODO節・`.claude/skills/vscode-extension-implement/SKILL.md`・
   `.claude/agents/vscode-extension-code-reviewer.md`を合わせて整備すること。

@@ -31,3 +31,4 @@ DDR（Design Decision Record）はADR（Architecture Decision Record）の考え
 architectureに限らない意思決定（運用ルールの決定等）も記録対象とする。
 
 - [0001-参考プロジェクトからAI開発資産を移植.md](ddr/0001-参考プロジェクトからAI開発資産を移植.md) ── 本リポジトリのAI開発資産・ディレクトリ構成を整備した経緯
+- [0002-yo-codeでTypeScript拡張機能の雛形を作成する.md](ddr/0002-yo-codeでTypeScript拡張機能の雛形を作成する.md) ── issue #2対応。yo code（generator-code）による拡張本体の雛形作成方針
