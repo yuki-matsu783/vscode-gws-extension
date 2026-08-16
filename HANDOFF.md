@@ -33,7 +33,7 @@ AI⇔AI/AI⇔人間の状況引継ぎメモ。常に「このブランチの現�
 | [x] | 15 | レビュー内容を取得し、実装・ドキュメントを修正する。対応が完了したコメントには対応内容を返信する（11〜15の作業ループを合意まで繰り返す） | `comments` / `reply` |
 | [x] | 16 | 設計反映: `plans/` `worklog/` の内容を `docs/spec/` `docs/ddr/` へ反映する | エージェント |
 | [x] | 17 | AIアセット改善: 作業中に気づいたルール・スキルの不備があれば `.claude/rules/` `.claude/skills/` `CLAUDE.md` `AGENTS.md` に反映する | エージェント |
-| [] | 18 | commit, push してレビュー依頼を行う | エージェント |
+| [x] | 18 | commit, push してレビュー依頼を行う | エージェント |
 | [] | 19 | MRでレビュー・コメントする | 人間 |
 | [] | 20 | レビュー内容を取得し、設計反映・AIアセットの内容を修正する。対応が完了したコメントには対応内容を返信する（16〜20を合意まで繰り返す） | `comments` / `reply` |
 | [] | 21 | `plans/` `worklog/` を削除し、`HANDOFF.md` を次タスクへリセットする | エージェント |
@@ -63,9 +63,11 @@ AI⇔AI/AI⇔人間の状況引継ぎメモ。常に「このブランチの現�
   issue #7の新規ファイルで更新、`.claude/rules/vscode-extension-style.md`に
   「メインエディタ領域のWebview（createWebviewPanel）」節を新設。
 
+- 設計反映・AIアセット改善の差分をcommit・push済み（フローステップ18完了）。
+
 ## 次にやること
 
-- 設計反映・AIアセット改善の差分をcommit・pushしてレビュー依頼（フローステップ18）。
+- PR [#9](https://github.com/yuki-matsu783/vscode-gws-extension/pull/9)で設計反映・AIアセット改善のレビュー・コメントを待つ（フローステップ19）。
 
 ## 判断を迷った内容
 
