@@ -54,11 +54,6 @@ AI⇔AI/AI⇔人間の状況引継ぎメモ。常に「このブランチの現�
 
 ## 未解決の内容
 
-- `.claude/skills/vscode-extension-implement/SKILL.md` / `.claude/agents/vscode-extension-code-reviewer.md`
-  のTODO（TypeScriptコーディング規約・コードレビュー観点の正式策定）が引き続き残っている。issue #4対応で
-  実装知見の暫定メモは追記したが、本格的な規約化はまだ先送り中（経緯:
-  [docs/ddr/0001-参考プロジェクトからAI開発資産を移植.md](../docs/ddr/0001-参考プロジェクトからAI開発資産を移植.md)）。
-  React Webview追加などの次の実装issueで着手する。
 - issue #4で定めたPython API側のエンドポイント契約（`POST /analyze`, body `{ path }`）は本リポジトリ側の
   仮定義（[docs/ddr/0003](../docs/ddr/0003-右クリックメニューから外部APIへ送るサンプルのコントラクトを決める.md)参照）。
   Python API実装リポジトリ側との正式なすり合わせは未実施。

@@ -1,0 +1,22 @@
+{
+    // webview側（React/ブラウザ環境）専用の型チェック用tsconfig。
+    // コード生成はesbuild.jsが担うため noEmit にし、tsc --noEmit -p src/webview は型チェック専用として実行する
+    // （詳細: ルートの tsconfig.json / esbuild.js / plans/imperative-purring-tarjan.md）。
+    "compilerOptions": {
+        "module": "ESNext",
+        "moduleResolution": "Bundler",
+        "target": "ES2022",
+        "jsx": "react-jsx",
+        "lib": [
+            "ES2022",
+            "DOM"
+        ],
+        "strict": true,
+        "noEmit": true,
+        "rootDir": ".",
+        "sourceMap": false
+    },
+    "include": [
+        "."
+    ]
+}

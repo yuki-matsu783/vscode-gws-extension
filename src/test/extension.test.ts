@@ -23,4 +23,15 @@ suite('Extension Test Suite', () => {
 		assert.ok(commands.includes('vscode-gws-extension.helloWorld'));
 		assert.ok(commands.includes('vscode-gws-extension.sendFileToApi'));
 	});
+
+	test('サイドバーwebview viewが定義されている', () => {
+		// webview自体の描画（React部分）はCIでは検証しない（F5での目視確認に委ねる。
+		// 詳細: docs/spec/右クリックで外部APIへリクエストを送信する.md「テストはコマンド登録の確認のみ」）。
+		// ここではpackage.jsonのmanifest定義のtypo等を防ぐ静的チェックのみ行う。
+		const ext = vscode.extensions.all.find((e) => e.packageJSON.name === 'vscode-gws-extension');
+		const views = ext?.packageJSON.contributes?.views?.['vscode-gws-extension-sidebar'];
+		assert.ok(
+			Array.isArray(views) && views.some((v: { id: string }) => v.id === 'vscode-gws-extension.sidebarView')
+		);
+	});
 });
