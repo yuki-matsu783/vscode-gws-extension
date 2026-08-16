@@ -27,8 +27,8 @@ AI⇔AI/AI⇔人間の状況引継ぎメモ。常に「このブランチの現�
 | [x] | 9 | planをもとにMR descriptionを更新する | `describe` |
 | [] | 10 | コンテキスト削減のためにセッションをcompactする | 人間 |
 | [x] | 11 | planをもとに作業を進める、作業内容はworklogに更新する | エージェント |
-| [] | 12 | commit, push してレビュー依頼を行う | エージェント |
-| [] | 13 | 作業内容をもとにMR descriptionを更新する | `describe` |
+| [x] | 12 | commit, push してレビュー依頼を行う | エージェント |
+| [x] | 13 | 作業内容をもとにMR descriptionを更新する | `describe` |
 | [] | 14 | MRでレビュー・コメントする | 人間 |
 | [] | 15 | レビュー内容を取得し、実装・ドキュメントを修正する。対応が完了したコメントには対応内容を返信する（11〜15の作業ループを合意まで繰り返す） | `comments` / `reply` |
 | [] | 16 | 設計反映: `plans/` `worklog/` の内容を `docs/spec/` `docs/ddr/` へ反映する | エージェント |
@@ -70,11 +70,15 @@ AI⇔AI/AI⇔人間の状況引継ぎメモ。常に「このブランチの現�
   実装中に`contributes.viewsContainers.activitybar[].id`にドットを含められない制約を発見し、
   `vscode-gws-extension.sidebar` → `vscode-gws-extension-sidebar` へ修正済み（詳細はworklog参照）。
 
+- flow-id 12〜13: commit・push（[890a2e0](https://github.com/yuki-matsu783/vscode-gws-extension/commit/890a2e0)）、
+  PR [#8](https://github.com/yuki-matsu783/vscode-gws-extension/pull/8) descriptionを実装状況で更新済み。
+
 ## 次にやること
 
-- flow-id 12: commit・push・レビュー依頼。
-- ユーザーにF5でのExtension Development Host起動による目視確認
-  （Activity Barアイコン表示・サイドバーwebviewのボタン動作）を依頼する。
+- flow-id 14: PR #8のレビューをお願いします。特にF5でのExtension Development Host起動による
+  Activity Barアイコン表示・サイドバーwebviewのボタン動作の目視確認をお願いしたいです
+  （このセッションはGUI操作不可のため未実施）。
+- レビューOKの連絡後、`comments all`で未解決コメント0件を再確認してから設計反映（flow-id 16〜）へ。
 
 ## 判断を迷った内容
 
