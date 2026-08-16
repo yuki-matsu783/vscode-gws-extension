@@ -12,4 +12,15 @@ suite('Extension Test Suite', () => {
 		assert.strictEqual(-1, [1, 2, 3].indexOf(5));
 		assert.strictEqual(-1, [1, 2, 3].indexOf(0));
 	});
+
+	test('コマンドが登録されている', async () => {
+		// activationEvents が空のため、コマンド未実行の状態では拡張が未activateのままになり
+		// getCommands() にも自身のコマンドが現れない。明示的にactivateしてから確認する。
+		const ext = vscode.extensions.all.find((e) => e.packageJSON.name === 'vscode-gws-extension');
+		await ext?.activate();
+
+		const commands = await vscode.commands.getCommands(true);
+		assert.ok(commands.includes('vscode-gws-extension.helloWorld'));
+		assert.ok(commands.includes('vscode-gws-extension.sendFileToApi'));
+	});
 });

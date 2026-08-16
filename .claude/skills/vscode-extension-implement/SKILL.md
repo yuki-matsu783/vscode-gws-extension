@@ -43,3 +43,32 @@ keywords: [設計ドキュメント, docs-spec, planモード, worklog, handoff,
 
 TypeScript/VS Code拡張のコーディング規約・ディレクトリ構成が決まり次第、上記を具体的な手順として
 書き起こすこと。
+
+## 実装中に判明した具体的な知見（本格整備前の暫定メモ）
+
+コーディング規約としての正式な体系化はまだ早いが、issue #4（右クリックメニュー→外部APIへの
+サンプル送信、詳細: [docs/spec/右クリックで外部APIへリクエストを送信する.md](../../../docs/spec/右クリックで外部APIへリクエストを送信する.md)）
+の実装で判明した、再現性のある具体的な注意点を記録する。
+
+- **`package.json`の`activationEvents`が空配列（`[]`）の場合、`contributes.commands`から暗黙の
+  活性化イベントが推測されるが、それはコマンドが実際に実行されたとき（メニュー選択・パレット実行・
+  `executeCommand`呼び出し等）に発火する。** `vscode.commands.getCommands(true)`
+  を呼ぶだけでは拡張は活性化されない（VS Code側がコマンドIDをUI表示用にmanifestから読んでいるだけで、
+  実際のコマンドレジストリへの登録は拡張の`activate()`実行後に行われるため）。
+  - このため、「新しいコマンドが登録されていること」を確認する単体テスト
+    （`src/test/extension.test.ts`）を書く場合、事前に明示的な活性化が必要:
+    ```typescript
+    const ext = vscode.extensions.all.find((e) => e.packageJSON.name === '<package.jsonのname>');
+    await ext?.activate();
+    ```
+  - この対策をせずに`getCommands(true)`だけで判定すると、既存コマンド（`helloWorld`等）も含めて
+    テストが失敗する（issue #4対応時に実機確認済み。`worklog/`はマージ時に削除される運用のため、
+    詳細な経緯が必要な場合はコミット履歴（issue #4のfeatureブランチ）を参照）。
+- 新規コマンドを右クリックメニュー（`editor/context` / `explorer/context`）に追加する際は、
+  `package.json`の`contributes.menus`にエントリを追加し、誤爆防止のため`"when": "resourceScheme == file"`
+  等の`when`句を検討する。コマンドハンドラは`(uri?: vscode.Uri, uris?: vscode.Uri[])`のシグネチャで
+  受け、`uri`未指定時は`vscode.window.activeTextEditor`へフォールバックするパターンが再利用できる
+  （詳細実装: `src/extension.ts`の`sendFileToApi`）。
+- HTTPクライアントは新規ライブラリ（axios等）を追加せずとも、`tsconfig.json`の`lib: ES2022` +
+  `@types/node`（24.x時点で確認）によりグローバル`fetch`が型付きで利用可能。ローカルAPIへの
+  リクエストのような単純なユースケースでは、まずこれで足りるか検討する。

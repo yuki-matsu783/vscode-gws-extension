@@ -16,8 +16,36 @@
       {
         "command": "vscode-gws-extension.helloWorld",
         "title": "Hello World"
+      },
+      {
+        "command": "vscode-gws-extension.sendFileToApi",
+        "title": "GWS: 選択ファイルを外部APIに送信（サンプル）"
       }
-    ]
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "vscode-gws-extension.sendFileToApi",
+          "when": "resourceScheme == file"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "vscode-gws-extension.sendFileToApi",
+          "when": "resourceScheme == file"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "vscode-gws-extension",
+      "properties": {
+        "vscode-gws-extension.apiBaseUrl": {
+          "type": "string",
+          "default": "http://localhost:8000",
+          "description": "ローカルPython API(FastAPI)のベースURL。右クリックメニューからのリクエスト送信サンプルで使用します。"
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
