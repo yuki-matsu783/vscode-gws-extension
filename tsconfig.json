@@ -19,10 +19,13 @@
         // "noUnusedParameters": true,  /* Report errors on unused parameters. */
     },
     // 参考ディレクトリ/ はローカル専用の参照用clone（.gitignore対象、コンパイル対象外。
-    // 詳細: .claude/rules/directory-structure.md「参考ディレクトリの扱い」）
+    // 詳細: .claude/rules/directory-structure.md「参考ディレクトリの扱い」）。
+    // src/webview/ はDOM lib・JSXが必要なため専用の src/webview/tsconfig.json で型チェックする
+    // （esbuild.js がバンドルを担当し、こちらのtscはコード生成しない）。
     "exclude": [
         "node_modules",
         ".vscode-test",
-        "参考ディレクトリ"
+        "参考ディレクトリ",
+        "src/webview"
     ]
 }

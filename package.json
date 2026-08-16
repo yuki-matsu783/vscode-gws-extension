@@ -22,6 +22,25 @@
         "title": "GWS: 選択ファイルを外部APIに送信（サンプル）"
       }
     ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "vscode-gws-extension-sidebar",
+          "title": "GWS",
+          "icon": "media/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "vscode-gws-extension-sidebar": [
+        {
+          "type": "webview",
+          "id": "vscode-gws-extension.sidebarView",
+          "name": "GWS",
+          "contextualTitle": "GWS"
+        }
+      ]
+    },
     "menus": {
       "editor/context": [
         {
@@ -49,18 +68,27 @@
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
+    "compile": "tsc -p ./ && tsc --noEmit -p src/webview && node esbuild.js",
+    "watch:extension": "tsc -watch -p ./",
+    "watch:webview": "node esbuild.js --watch",
+    "watch": "npm run watch:extension",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src",
     "test": "vscode-test"
+  },
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
   },
   "devDependencies": {
     "@types/vscode": "^1.125.0",
     "@types/mocha": "^10.0.10",
     "@types/node": "24.x",
+    "@types/react": "^19.2.6",
+    "@types/react-dom": "^19.2.4",
     "typescript-eslint": "^8.61.1",
     "eslint": "^10.5.0",
+    "esbuild": "^0.28.0",
     "typescript": "^6.0.3",
     "@vscode/test-cli": "^0.0.15",
     "@vscode/test-electron": "^3.0.0"
