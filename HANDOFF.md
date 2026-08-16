@@ -29,10 +29,10 @@ AI⇔AI/AI⇔人間の状況引継ぎメモ。常に「このブランチの現�
 | [x] | 11 | planをもとに作業を進める、作業内容はworklogに更新する | エージェント |
 | [x] | 12 | commit, push してレビュー依頼を行う | エージェント |
 | [x] | 13 | 作業内容をもとにMR descriptionを更新する | `describe` |
-| [] | 14 | MRでレビュー・コメントする | 人間 |
-| [] | 15 | レビュー内容を取得し、実装・ドキュメントを修正する。対応が完了したコメントには対応内容を返信する（11〜15の作業ループを合意まで繰り返す） | `comments` / `reply` |
-| [] | 16 | 設計反映: `plans/` `worklog/` の内容を `docs/spec/` `docs/ddr/` へ反映する | エージェント |
-| [] | 17 | AIアセット改善: 作業中に気づいたルール・スキルの不備があれば `.claude/rules/` `.claude/skills/` `CLAUDE.md` `AGENTS.md` に反映する | エージェント |
+| [x] | 14 | MRでレビュー・コメントする | 人間 |
+| [x] | 15 | レビュー内容を取得し、実装・ドキュメントを修正する。対応が完了したコメントには対応内容を返信する（11〜15の作業ループを合意まで繰り返す） | `comments` / `reply` |
+| [x] | 16 | 設計反映: `plans/` `worklog/` の内容を `docs/spec/` `docs/ddr/` へ反映する | エージェント |
+| [x] | 17 | AIアセット改善: 作業中に気づいたルール・スキルの不備があれば `.claude/rules/` `.claude/skills/` `CLAUDE.md` `AGENTS.md` に反映する | エージェント |
 | [] | 18 | commit, push してレビュー依頼を行う | エージェント |
 | [] | 19 | MRでレビュー・コメントする | 人間 |
 | [] | 20 | レビュー内容を取得し、設計反映・AIアセットの内容を修正する。対応が完了したコメントには対応内容を返信する（16〜20を合意まで繰り返す） | `comments` / `reply` |
@@ -56,10 +56,16 @@ AI⇔AI/AI⇔人間の状況引継ぎメモ。常に「このブランチの現�
   `npm run compile`/`lint`/`test`（3件）すべてパス。一時テストで実際にExtension Development Host上
   からパネルオープン・シングルトン動作（2回目実行でreveal）を検証済み（検証後に一時ファイルは削除）。
 - 実装差分をcommit・push、PR [#9](https://github.com/yuki-matsu783/vscode-gws-extension/pull/9)のdescriptionを実装内容で更新。
+- レビューOK受領、未解決スレッド0件を確認（フローステップ14〜15完了）。
+- 設計反映（フローステップ16）: `docs/spec/メインエディタにReact Webviewを表示する.md`・
+  `docs/ddr/0005-メインエディタReact-Webviewサンプルの技術構成を決める.md`を新規作成。
+- AIアセット改善（フローステップ17）: `.claude/rules/directory-structure.md`のツリーを
+  issue #7の新規ファイルで更新、`.claude/rules/vscode-extension-style.md`に
+  「メインエディタ領域のWebview（createWebviewPanel）」節を新設。
 
 ## 次にやること
 
-- PR [#9](https://github.com/yuki-matsu783/vscode-gws-extension/pull/9)で実装のレビュー・コメントを待つ（フローステップ14）。
+- 設計反映・AIアセット改善の差分をcommit・pushしてレビュー依頼（フローステップ18）。
 
 ## 判断を迷った内容
 

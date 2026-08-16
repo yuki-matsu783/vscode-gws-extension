@@ -39,14 +39,23 @@ plan: `plans/floofy-splashing-sparrow.md`
   2回目実行でも新規パネルが増えず（シングルトン管理＝`reveal`が機能）1つのままであることを検証した。
   確認後は一時ファイルを削除済み（恒久テストとしては追加しない、というplanの方針通り）。
 
+- フローステップ14〜15: 未解決レビュースレッド0件を確認（自動投稿の工数レポートのみ）。
+- フローステップ16（設計反映）: `docs/spec/メインエディタにReact Webviewを表示する.md`・
+  `docs/ddr/0005-メインエディタReact-Webviewサンプルの技術構成を決める.md`を作成。
+- フローステップ17（AIアセット改善）: `.claude/rules/directory-structure.md`のツリーを
+  issue #7の新規ファイル（`EditorPanelProvider.ts`/`EditorApp.tsx`/`editorPanelIndex.tsx`/
+  `getWebviewHtml.ts`）で更新し、`docs/spec`の説明も実態（空ではない）に合わせて修正。
+  `.claude/rules/vscode-extension-style.md`に「メインエディタ領域のWebview
+  （`createWebviewPanel`）」節を新設し、`CatCodingPanel`パターン・`ViewColumn`/
+  `retainContextWhenHidden`方針・esbuild複数entry point化・CSP共有ユーティリティ化・
+  一時テストでのF5代替検証手法を記録。
+
 ## ダメだったこと
 
 - 特になし。
 
 ## 次の一歩
 
-- フローステップ12（commit, push してレビュー依頼）へ進む。
-- フローステップ16（設計反映）で`docs/spec/メインエディタにReact Webviewを表示する.md`・
-  `docs/ddr/0005-メインエディタReact-Webviewサンプルの技術構成を決める.md`を作成する。
+- フローステップ18（commit, push してレビュー依頼）へ進む。
 
 ---
